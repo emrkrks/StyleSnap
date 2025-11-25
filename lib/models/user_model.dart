@@ -5,56 +5,77 @@ part 'user_model.g.dart';
 @JsonSerializable()
 class UserModel {
   final String id;
+  @JsonKey(name: 'created_at')
   final DateTime createdAt;
+  @JsonKey(name: 'updated_at')
   final DateTime updatedAt;
 
   // Auth
+  @JsonKey(name: 'auth_id')
   final String authId;
   final String? email;
   final String? phone;
 
   // Profile
   final String name;
+  @JsonKey(name: 'avatar_url')
   final String? avatarUrl;
   final String? bio;
 
   // Preferences
   final String? gender;
+  @JsonKey(name: 'age_range')
   final String? ageRange;
+  @JsonKey(name: 'body_type')
   final String? bodyType;
+  @JsonKey(name: 'skin_tone')
   final String? skinTone;
 
   // Location
   final String? city;
+  @JsonKey(name: 'country_code')
   final String? countryCode;
   final String? timezone;
 
   // Style
+  @JsonKey(name: 'style_preferences')
   final List<String> stylePreferences;
+  @JsonKey(name: 'favorite_colors')
   final List<String> favoriteColors;
 
   // Settings
   final String language;
   final String currency;
+  @JsonKey(name: 'measurement_unit')
   final String measurementUnit;
 
   // Onboarding
+  @JsonKey(name: 'onboarding_completed')
   final bool onboardingCompleted;
+  @JsonKey(name: 'onboarding_step')
   final int onboardingStep;
 
   // Subscription
+  @JsonKey(name: 'subscription_status')
   final String subscriptionStatus;
+  @JsonKey(name: 'subscription_expires_at')
   final DateTime? subscriptionExpiresAt;
 
   // Notifications
+  @JsonKey(name: 'notifications_enabled')
   final bool notificationsEnabled;
+  @JsonKey(name: 'daily_reminder_time')
   final String dailyReminderTime;
 
   // Analytics
+  @JsonKey(name: 'referral_code')
   final String? referralCode;
+  @JsonKey(name: 'referred_by')
   final String? referredBy;
+  @JsonKey(name: 'total_referrals')
   final int totalReferrals;
 
+  @JsonKey(name: 'deleted_at')
   final DateTime? deletedAt;
 
   const UserModel({

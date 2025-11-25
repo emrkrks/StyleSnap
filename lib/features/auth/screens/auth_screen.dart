@@ -41,11 +41,12 @@ class AuthScreenState extends ConsumerState<AuthScreen> {
     );
   }
 
-  void _handleAppleSignIn() {
-    ref
-        .read(authControllerProvider.notifier)
-        .signInWithOAuth(OAuthProvider.apple);
-  }
+  // TODO: Uncomment when Apple Developer account is configured
+  // void _handleAppleSignIn() {
+  //   ref
+  //       .read(authControllerProvider.notifier)
+  //       .signInWithOAuth(OAuthProvider.apple);
+  // }
 
   void _handleGoogleSignIn() {
     ref
@@ -221,13 +222,14 @@ class AuthScreenState extends ConsumerState<AuthScreen> {
                         const SizedBox(height: 24),
 
                         // Social Login Buttons
-                        _buildSocialButton(
-                          'Continue with Apple',
-                          Icons.apple,
-                          AppColors.black,
-                          authState.isLoading ? null : _handleAppleSignIn,
-                        ),
-                        const SizedBox(height: 12),
+                        // TODO: Enable Apple Sign-In after configuring Apple Developer account
+                        // _buildSocialButton(
+                        //   'Continue with Apple',
+                        //   Icons.apple,
+                        //   AppColors.black,
+                        //   authState.isLoading ? null : _handleAppleSignIn,
+                        // ),
+                        // const SizedBox(height: 12),
                         _buildSocialButton(
                           'Continue with Google',
                           Icons.g_mobiledata,

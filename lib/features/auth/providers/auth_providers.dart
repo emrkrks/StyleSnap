@@ -87,9 +87,7 @@ class AuthController extends StateNotifier<AuthUIState> {
         var userProfile = await repository.getCurrentUser();
 
         // Create profile if doesn't exist
-        if (userProfile == null) {
-          userProfile = await _createUserProfile(currentUser);
-        }
+        userProfile ??= await _createUserProfile(currentUser);
 
         state = state.copyWith(isLoading: false, user: currentUser);
       }
@@ -115,9 +113,7 @@ class AuthController extends StateNotifier<AuthUIState> {
           final repository = ref.read(userRepositoryProvider);
           var userProfile = await repository.getCurrentUser();
 
-          if (userProfile == null) {
-            userProfile = await _createUserProfile(currentUser);
-          }
+          userProfile ??= await _createUserProfile(currentUser);
 
           state = state.copyWith(isLoading: false, user: currentUser);
         }
