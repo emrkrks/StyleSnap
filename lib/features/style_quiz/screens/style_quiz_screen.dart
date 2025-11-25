@@ -31,33 +31,60 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
   ];
 
   final List<String> _colorNames = [
-    'Black', 'White', 'Gray', 'Blue', 'Green', 'Red',
-    'Pink', 'Purple', 'Orange', 'Yellow', 'Brown', 'Turquoise',
+    'Black',
+    'White',
+    'Gray',
+    'Blue',
+    'Green',
+    'Red',
+    'Pink',
+    'Purple',
+    'Orange',
+    'Yellow',
+    'Brown',
+    'Turquoise',
   ];
 
   // Question 2: Style Preferences
   final List<String> _styleOptions = [
-    'Casual', 'Business', 'Sporty', 'Elegant', 
-    'Bohemian', 'Minimalist', 'Vintage', 'Streetwear'
+    'Casual',
+    'Business',
+    'Sporty',
+    'Elegant',
+    'Bohemian',
+    'Minimalist',
+    'Vintage',
+    'Streetwear',
   ];
 
   // Question 3: Body Type
   final List<String> _bodyTypes = [
-    'Slim', 'Athletic', 'Curvy', 'Plus Size', 'Petite', 'Tall'
+    'Slim',
+    'Athletic',
+    'Curvy',
+    'Plus Size',
+    'Petite',
+    'Tall',
   ];
 
   // Question 4: Occasions
   final List<String> _occasions = [
-    'Work/Office', 'Casual Outings', 'Sports/Gym', 'Parties/Events',
-    'Travel', 'Home/Relaxing', 'Dates', 'Formal Events'
+    'Work/Office',
+    'Casual Outings',
+    'Sports/Gym',
+    'Parties/Events',
+    'Travel',
+    'Home/Relaxing',
+    'Dates',
+    'Formal Events',
   ];
 
   // Question 5: Budget
   final List<String> _budgetOptions = [
-    'Budget-Friendly\n(<₺500/month)',
-    'Moderate\n(₺500-1500/month)',
-    'Premium\n(₺1500-3000/month)',
-    'Luxury\n(>₺3000/month)',
+    'Budget-Friendly (<TL500/month)',
+    'Moderate (TL500-1500/month)',
+    'Premium (TL1500-3000/month)',
+    'Luxury (>TL3000/month)',
   ];
 
   void _nextPage() {
@@ -83,11 +110,11 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
   void _completeQuiz() {
     // Save preferences and navigate to home
     ref.read(styleQuizProvider.notifier).savePreferences();
-    
+
     // TODO: Navigate to home screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Preferences saved! 🎉')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Preferences saved!')));
   }
 
   @override
@@ -273,7 +300,7 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
 
   Widget _buildBodyTypePage(StyleQuizState state) {
     return _buildQuestionPage(
-      question: 'What's your body type?',
+      question: 'What is your body type?',
       subtitle: 'Select one',
       child: ListView(
         padding: const EdgeInsets.all(24),
@@ -334,7 +361,7 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
 
   Widget _buildBudgetPage(StyleQuizState state) {
     return _buildQuestionPage(
-      question: 'What's your monthly clothing budget?',
+      question: 'What is your monthly clothing budget?',
       subtitle: 'Select one',
       child: ListView(
         padding: const EdgeInsets.all(24),
@@ -342,7 +369,7 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
           final index = entry.key;
           final budget = entry.value;
           final isSelected = state.budget == index;
-          
+
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: RadioListTile<int>(
@@ -383,10 +410,7 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                question,
-                style: AppTextStyles.headlineMedium,
-              ),
+              Text(question, style: AppTextStyles.headlineMedium),
               const SizedBox(height: 8),
               Text(
                 subtitle,
