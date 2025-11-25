@@ -5,6 +5,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/theme/app_theme.dart';
 import 'core/config/app_config.dart';
 import 'features/onboarding/screens/onboarding_screen.dart';
+import 'features/auth/providers/auth_providers.dart';
+import 'features/style_quiz/screens/style_quiz_screen.dart';
+import 'features/auth/screens/auth_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,14 +56,14 @@ class StyleSnapApp extends StatelessWidget {
   }
 }
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -68,11 +71,40 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _initialize() async {
-    // Simulate initialization delay
+    // Wait for initial auth state
     await Future.delayed(const Duration(seconds: 2));
 
-    // Navigate to onboarding
-    if (mounted) {
+    if (!mounted) return;
+
+    // Check if user is already authenticated
+    final supabase = ref.read(supabaseServiceProvider);
+    final currentUser = supabase.currentUser;
+
+    if (currentUser != null) {
+      // User is logged in, check onboarding status
+      final repository = ref.read(userRepositoryProvider);
+      try {
+        final userProfile = await repository.getCurrentUser();
+
+        if (userProfile != null && userProfile.onboardingCompleted) {
+          // Already completed onboarding, go to home (placeholder: auth screen for now)
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const AuthScreen()),
+          );
+        } else {
+          // Not completed onboarding, go to quiz
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const StyleQuizScreen()),
+          );
+        }
+      } catch (e) {
+        // Error loading profile, go to onboarding
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const OnboardingScreen()),
+        );
+      }
+    } else {
+      // Not logged in, go to onboarding
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const OnboardingScreen()),
       );
