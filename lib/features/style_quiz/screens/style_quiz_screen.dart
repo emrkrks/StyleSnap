@@ -14,11 +14,16 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  // Question 1: Favorite Colors
+  // Question 1: Favorite Colors (24 comprehensive colors)
   final List<Color> _colorOptions = [
+    // Neutrals
     const Color(0xFF000000), // Black
     const Color(0xFFFFFFFF), // White
     const Color(0xFF808080), // Gray
+    const Color(0xFF2C3E50), // Charcoal
+    const Color(0xFF000080), // Navy
+    const Color(0xFFF5F5DC), // Beige
+    // Primary & Basic
     const Color(0xFF0000FF), // Blue
     const Color(0xFF008000), // Green
     const Color(0xFFFF0000), // Red
@@ -26,14 +31,33 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
     const Color(0xFF800080), // Purple
     const Color(0xFFFFA500), // Orange
     const Color(0xFFFFFF00), // Yellow
+    // Earth Tones
     const Color(0xFF8B4513), // Brown
+    const Color(0xFFD2691E), // Tan
+    const Color(0xFF556B2F), // Olive
+    const Color(0xFF8B0000), // Burgundy
+    // Pastels
+    const Color(0xFFE6E6FA), // Lavender
+    const Color(0xFF98FF98), // Mint
+    const Color(0xFFFFDAB9), // Peach
+    const Color(0xFFADD8E6), // Baby Blue
+    // Jewel Tones
+    const Color(0xFF50C878), // Emerald
+    const Color(0xFF9B111E), // Ruby
+    const Color(0xFF0F52BA), // Sapphire
     const Color(0xFF00CED1), // Turquoise
   ];
 
   final List<String> _colorNames = [
+    // Neutrals
     'Black',
     'White',
     'Gray',
+    'Charcoal',
+    'Navy',
+    'Beige',
+
+    // Primary & Basic
     'Blue',
     'Green',
     'Red',
@@ -41,7 +65,23 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
     'Purple',
     'Orange',
     'Yellow',
+
+    // Earth Tones
     'Brown',
+    'Tan',
+    'Olive',
+    'Burgundy',
+
+    // Pastels
+    'Lavender',
+    'Mint',
+    'Peach',
+    'Baby Blue',
+
+    // Jewel Tones
+    'Emerald',
+    'Ruby',
+    'Sapphire',
     'Turquoise',
   ];
 
@@ -214,9 +254,9 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
       child: GridView.builder(
         padding: const EdgeInsets.all(24),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+          crossAxisCount: 6,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
         ),
         itemCount: _colorOptions.length,
         itemBuilder: (context, index) {
@@ -231,8 +271,8 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
             child: Column(
               children: [
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: 50,
+                  height: 50,
                   decoration: BoxDecoration(
                     color: color,
                     shape: BoxShape.circle,
