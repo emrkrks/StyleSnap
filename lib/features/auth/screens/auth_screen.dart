@@ -1,18 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/theme/app_theme.dart';
+import '../providers/auth_providers.dart';
+import 'phone_otp_screen.dart';
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<AuthScreen> createState() => AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class AuthScreenState extends ConsumerState<AuthScreen> {
   bool _isLogin = true;
+  final _phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
+  }
+
+  void _handleContinue() {
+    final phone = _phoneController.text.trim();
+
+    if (phone.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter your phone number')),
+      );
+      return;
+    }
+
+    // Send OTP
+    ref.read(authControllerProvider.notifier).signInWithPhone(phone);
+
+    // Navigate to OTP screen
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => PhoneOTPScreen(phoneNumber: phone)),
+    );
+  }
+
+  void _handleAppleSignIn() {
+    ref
+        .read(authControllerProvider.notifier)
+        .signInWithOAuth(OAuthProvider.apple);
+  }
+
+  void _handleGoogleSignIn() {
+    ref
+        .read(authControllerProvider.notifier)
+        .signInWithOAuth(OAuthProvider.google);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -96,6 +140,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
                         // Phone Number Input
                         TextField(
+                          controller: _phoneController,
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
                             hintText: '+90 5XX XXX XX XX',
@@ -108,11 +153,25 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         const SizedBox(height: 16),
 
+                        // Error Message
+                        if (authState.error != null)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Text(
+                              authState.error!,
+                              style: const TextStyle(
+                                color: AppColors.error,
+                                fontSize: 12,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+
                         // Continue Button
                         ElevatedButton(
-                          onPressed: () {
-                            // TODO: Implement phone auth
-                          },
+                          onPressed: authState.isLoading
+                              ? null
+                              : _handleContinue,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -120,14 +179,25 @@ class _AuthScreenState extends State<AuthScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: const Text(
-                            'Continue',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.white,
-                            ),
-                          ),
+                          child: authState.isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.white,
+                                    ),
+                                  ),
+                                )
+                              : const Text(
+                                  'Continue',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.white,
+                                  ),
+                                ),
                         ),
                         const SizedBox(height: 24),
 
@@ -155,18 +225,14 @@ class _AuthScreenState extends State<AuthScreen> {
                           'Continue with Apple',
                           Icons.apple,
                           AppColors.black,
-                          () {
-                            // TODO: Implement Apple Sign In
-                          },
+                          authState.isLoading ? null : _handleAppleSignIn,
                         ),
                         const SizedBox(height: 12),
                         _buildSocialButton(
                           'Continue with Google',
                           Icons.g_mobiledata,
                           const Color(0xFFDB4437),
-                          () {
-                            // TODO: Implement Google Sign In
-                          },
+                          authState.isLoading ? null : _handleGoogleSignIn,
                         ),
                         const SizedBox(height: 24),
 
@@ -214,7 +280,7 @@ class _AuthScreenState extends State<AuthScreen> {
     String text,
     IconData icon,
     Color color,
-    VoidCallback onTap,
+    VoidCallback? onTap,
   ) {
     return OutlinedButton.icon(
       onPressed: onTap,
