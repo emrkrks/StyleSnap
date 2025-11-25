@@ -1,0 +1,118 @@
+name: stylesnap
+description: "AI-Powered Personal Styling App - Your Personal Stylist in Your Pocket"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Icons
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.2.1
+  
+  # State Management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+  
+  # Backend & Database
+  supabase_flutter: ^2.5.6
+  
+  # AI & ML
+  google_generative_ai: ^0.4.3
+  google_ml_kit: ^0.18.0
+  
+  # Image Handling
+  image_picker: ^1.0.7
+  image: ^4.1.7
+  cached_network_image: ^3.3.1
+  
+  # Camera
+  camera: ^0.10.5+9
+  
+  # Storage & File Management
+  path_provider: ^2.1.2
+  shared_preferences: ^2.2.3
+  
+  # Payments & Monetization
+  purchases_flutter: ^6.29.2
+  google_mobile_ads: ^5.1.0
+  
+  # Social Sharing
+  share_plus: ^12.0.1
+  
+  # Firebase
+  firebase_core: ^3.6.0
+  firebase_messaging: ^15.1.3
+  firebase_analytics: ^11.3.3
+  
+  # HTTP & Networking
+  http: ^1.2.1
+  dio: ^5.4.3+1
+  
+  # Weather API
+  geolocator: ^12.0.0
+  geocoding: ^3.0.0
+  
+  # Utilities
+  uuid: ^4.3.3
+  intl: ^0.19.0
+  url_launcher: ^6.2.5
+  
+  # Navigation
+  go_router: ^14.2.0
+  
+  # Environment Variables
+  flutter_dotenv: ^5.1.0
+  
+  # JSON Serialization
+  json_annotation: ^4.8.1
+  
+  # Local Notifications
+  flutter_local_notifications: ^17.2.3
+  
+  # Animations
+  lottie: ^3.1.2
+  
+  # Permissions
+  permission_handler: ^11.3.1
+  
+  # Loading & Progress
+  shimmer: ^3.0.0
+  
+  # SVG Support
+  flutter_svg: ^2.0.10+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  
+  # Code Generation
+  build_runner: ^2.4.9
+  json_serializable: ^6.7.1
+  riverpod_generator: ^2.4.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - .env
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
