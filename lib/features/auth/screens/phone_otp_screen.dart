@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/auth_providers.dart';
+import '../../style_quiz/screens/style_quiz_screen.dart';
 
 class PhoneOTPScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
@@ -18,6 +19,20 @@ class _PhoneOTPScreenState extends ConsumerState<PhoneOTPScreen> {
     (_) => TextEditingController(),
   );
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen for auth changes
+    ref.listenManual(authControllerProvider, (previous, next) {
+      if (next.user != null && mounted) {
+        // Successfully authenticated, navigate to style quiz
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const StyleQuizScreen()),
+        );
+      }
+    });
+  }
 
   @override
   void dispose() {
