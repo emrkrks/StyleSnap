@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../services/wardrobe_scanning_service.dart';
-import '../../../models/clothing_item.dart';
 import 'clothing_review_screen.dart';
 
 /// Screen showing AI processing progress and results
@@ -25,7 +24,6 @@ class ImageProcessingScreen extends ConsumerStatefulWidget {
 class _ImageProcessingScreenState extends ConsumerState<ImageProcessingScreen> {
   bool _isProcessing = true;
   String _processingStep = 'Analyzing image...';
-  ClothingItem? _result;
   String? _error;
 
   @override
@@ -58,7 +56,6 @@ class _ImageProcessingScreenState extends ConsumerState<ImageProcessingScreen> {
 
       setState(() {
         _isProcessing = false;
-        _result = result;
       });
 
       // Navigate to review screen

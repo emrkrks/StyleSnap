@@ -70,18 +70,21 @@ Building a complete Flutter MVP for an AI-powered personal styling app targeting
 ## 📋 Upcoming Tasks
 
 ### Style Preference Quiz (Week 3)
-- [ ] Create 5-screen questionnaire
-- [ ] Collect user style preferences
-- [ ] Collect body type & measurements
-- [ ] Save preferences to user profile
+- [x] Create 5-screen questionnaire
+- [x] Collect user style preferences (24 colors, 8 styles, 6 body types)
+- [x] Collect body type & measurements
+- [x] Save preferences to user profile
 
 ### Wardrobe Scanner (Week 4-5)
-- [ ] Create camera UI with capture button
-- [ ] Implement gallery picker
-- [ ] Integrate ImagePreprocessor
-- [ ] Integrate GeminiClothingService
-- [ ] Create item review/edit screen
-- [ ] Save analyzed items to database
+- [x] Create camera UI with capture button
+- [x] Implement gallery picker (single & batch)
+- [x] Integrate ImagePreprocessor
+- [x] Integrate GeminiClothingService
+- [x] Create item review/edit screen
+- [x] Save analyzed items to database
+- [x] State management with Riverpod
+- [ ] Create Supabase storage bucket
+- [ ] Manual testing & validation
 
 ### Wardrobe Management (Week 5-6)
 - [ ] Create wardrobe grid view
@@ -124,10 +127,10 @@ Building a complete Flutter MVP for an AI-powered personal styling app targeting
 
 ## 📊 Current Status
 
-**Phase:** Authentication Complete, Starting Wardrobe Features  
-**Progress:** ~30% Complete  
+**Phase:** Wardrobe Scanner Complete, Starting Wardrobe Management  
+**Progress:** ~40% Complete  
 **Code Quality:** ✅ 0 errors, 0 warnings  
-**Next Milestone:** Style Preference Quiz & Wardrobe Scanner
+**Next Milestone:** Wardrobe Grid View & Category Management
 - [ ] RevenueCat payment integration
 - [ ] Profile & settings screens
 - [ ] Outfit history
