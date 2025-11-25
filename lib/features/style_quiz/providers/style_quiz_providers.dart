@@ -92,7 +92,6 @@ class StyleQuizNotifier extends StateNotifier<StyleQuizState> {
         favoriteColors: state.favoriteColors,
         stylePreferences: state.stylePreferences,
         bodyType: state.bodyType,
-        preferredOccasions: state.occasions,
         clothingBudget: _getBudgetValue(state.budget),
         onboardingCompleted: true,
         updatedAt: DateTime.now(),
