@@ -110,12 +110,7 @@ Requirements:
           .timeout(AppConstants.aiProcessingTimeout);
 
       final jsonText = response.text?.trim() ?? '';
-
-      // Remove markdown code blocks if present
-      final cleanJson = jsonText
-          .replaceAll('```json', '')
-          .replaceAll('```', '')
-          .trim();
+      final cleanJson = _extractJson(jsonText);
 
       final Map<String, dynamic> data = json.decode(cleanJson);
       final List<dynamic> recs = data['recommendations'];
@@ -157,6 +152,24 @@ Requirements:
       return 'fall';
     } else {
       return 'winter';
+    }
+  }
+
+  /// Extract JSON object from text using Regex
+  String _extractJson(String text) {
+    try {
+      // Find the first '{' and the last '}'
+      final startIndex = text.indexOf('{');
+      final endIndex = text.lastIndexOf('}');
+
+      if (startIndex == -1 || endIndex == -1 || startIndex > endIndex) {
+        // If no JSON object found, try to clean markdown and return
+        return text.replaceAll('```json', '').replaceAll('```', '').trim();
+      }
+
+      return text.substring(startIndex, endIndex + 1);
+    } catch (e) {
+      return text;
     }
   }
 }

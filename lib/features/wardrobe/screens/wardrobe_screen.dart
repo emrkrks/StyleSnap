@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/clothing_item.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/utils/color_utils.dart';
 import '../providers/wardrobe_providers.dart';
 import 'clothing_detail_screen.dart';
 import 'add_clothing_screen.dart';
@@ -63,7 +64,10 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
             children: [
               // Search bar
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: 'Search by brand, style, or notes...',
@@ -99,9 +103,7 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
                 tabs: [
                   const Tab(text: 'All'),
                   ...AppConstants.clothingCategories.map(
-                    (category) => Tab(
-                      text: _capitalize(category),
-                    ),
+                    (category) => Tab(text: _capitalize(category)),
                   ),
                 ],
               ),
@@ -115,7 +117,11 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: theme.colorScheme.error,
+              ),
               const SizedBox(height: 16),
               Text('Error loading wardrobe: $error'),
               const SizedBox(height: 16),
@@ -128,7 +134,7 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
         ),
         data: (items) {
           final filteredItems = _filterItems(items);
-          
+
           if (filteredItems.isEmpty) {
             return _buildEmptyState(context);
           }
@@ -139,7 +145,9 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
               _buildItemGrid(filteredItems),
               ...AppConstants.clothingCategories.map(
                 (category) => _buildItemGrid(
-                  filteredItems.where((item) => item.category == category).toList(),
+                  filteredItems
+                      .where((item) => item.category == category)
+                      .toList(),
                 ),
               ),
             ],
@@ -150,9 +158,7 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const AddClothingScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const AddClothingScreen()),
           );
         },
         icon: const Icon(Icons.add_a_photo),
@@ -162,7 +168,9 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
   }
 
   List<ClothingItem> _filterItems(List<ClothingItem> items) {
-    var filtered = items.where((item) => item.deletedAt == null && !item.archived).toList();
+    var filtered = items
+        .where((item) => item.deletedAt == null && !item.archived)
+        .toList();
 
     if (_showFavoritesOnly) {
       filtered = filtered.where((item) => item.favorite).toList();
@@ -175,7 +183,9 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
             (item.subcategory?.toLowerCase().contains(query) ?? false) ||
             (item.notes?.toLowerCase().contains(query) ?? false) ||
             item.styles.any((style) => style.toLowerCase().contains(query)) ||
-            item.materials.any((material) => material.toLowerCase().contains(query));
+            item.materials.any(
+              (material) => material.toLowerCase().contains(query),
+            );
       }).toList();
     }
 
@@ -342,7 +352,7 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
                         width: 16,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: _parseColor(color.hex),
+                          color: ColorUtils.parse(color.hex),
                           shape: BoxShape.circle,
                           border: Border.all(
                             color: Colors.grey[300]!,
@@ -398,14 +408,5 @@ class _WardrobeScreenState extends ConsumerState<WardrobeScreen>
   String _capitalize(String text) {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1);
-  }
-
-  Color _parseColor(String hex) {
-    try {
-      final hexColor = hex.replaceAll('#', '');
-      return Color(int.parse('FF$hexColor', radix: 16));
-    } catch (e) {
-      return Colors.grey;
-    }
   }
 }
