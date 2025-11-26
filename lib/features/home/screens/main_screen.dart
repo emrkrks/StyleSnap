@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../outfits/screens/outfit_recommendations_screen.dart';
 import '../../wardrobe/screens/wardrobe_screen.dart';
+import 'profile_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -17,7 +18,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   final List<Widget> _screens = [
     const OutfitRecommendationsScreen(),
     const WardrobeScreen(),
-    const Center(child: Text('Profile/Settings')), // Placeholder
+    const ProfileScreen(),
   ];
 
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
 import '../providers/style_quiz_providers.dart';
+import '../../home/screens/main_screen.dart';
 
 class StyleQuizScreen extends ConsumerStatefulWidget {
   const StyleQuizScreen({super.key});
@@ -151,10 +152,10 @@ class _StyleQuizScreenState extends ConsumerState<StyleQuizScreen> {
     // Save preferences and navigate to home
     ref.read(styleQuizProvider.notifier).savePreferences();
 
-    // TODO: Navigate to home screen
-    ScaffoldMessenger.of(
+    // Navigate to home screen
+    Navigator.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Preferences saved!')));
+    ).pushReplacement(MaterialPageRoute(builder: (_) => const MainScreen()));
   }
 
   @override

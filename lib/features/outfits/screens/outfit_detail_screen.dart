@@ -7,6 +7,10 @@ import '../../../models/clothing_item.dart';
 import '../providers/outfit_providers.dart';
 import '../../../repositories/clothing_repository.dart';
 import '../../wardrobe/screens/clothing_detail_screen.dart';
+import '../widgets/outfit_share_preview.dart';
+import '../../../services/screenshot_service.dart';
+import '../../../services/share_service.dart';
+import '../../../features/auth/providers/auth_providers.dart';
 
 class OutfitDetailScreen extends ConsumerStatefulWidget {
   final OutfitRecommendation recommendation;
@@ -20,6 +24,7 @@ class OutfitDetailScreen extends ConsumerStatefulWidget {
 class _OutfitDetailScreenState extends ConsumerState<OutfitDetailScreen> {
   List<ClothingItem> _clothingItems = [];
   bool _isLoading = true;
+  final GlobalKey _shareKey = GlobalKey();
 
   @override
   void initState() {
@@ -326,7 +331,68 @@ class _OutfitDetailScreenState extends ConsumerState<OutfitDetailScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _shareOutfit,
+        icon: const Icon(Icons.share),
+        label: const Text('Share'),
+      ),
     );
+  }
+
+  Future<void> _shareOutfit() async {
+    try {
+      // Get username
+      final userAsync = ref.read(currentUserProvider);
+      final username = await userAsync.when(
+        data: (user) => user?.name ?? 'user',
+        loading: () => 'user',
+        error: (_, __) => 'user',
+      );
+
+      if (!mounted) return;
+
+      // Show overlay with share preview
+      final overlay = Overlay.of(context);
+      late OverlayEntry overlayEntry;
+
+      overlayEntry = OverlayEntry(
+        builder: (context) => Positioned(
+          left: -10000,
+          top: -10000,
+          child: RepaintBoundary(
+            key: _shareKey,
+            child: OutfitSharePreview(
+              outfit: widget.recommendation,
+              username: username,
+            ),
+          ),
+        ),
+      );
+
+      overlay.insert(overlayEntry);
+
+      // Wait for render
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      // Capture screenshot
+      final file = await ScreenshotService.captureAndSave(
+        _shareKey,
+        'outfit_${DateTime.now().millisecondsSinceEpoch}',
+      );
+
+      // Remove overlay
+      overlayEntry.remove();
+
+      if (file != null && mounted) {
+        await ShareService.showShareDialog(context, file);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Failed to share outfit')));
+      }
+    }
   }
 
   void _saveOutfit(BuildContext context) async {
