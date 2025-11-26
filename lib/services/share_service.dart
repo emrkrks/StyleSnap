@@ -12,7 +12,8 @@ class ShareService {
   }) async {
     try {
       final xFile = XFile(imageFile.path);
-      await SharePlus.instance.shareXFiles(
+      // ignore: deprecated_member_use
+      await Share.shareXFiles(
         [xFile],
         text: text ?? 'Check out my StyleSnap outfit! ✨',
         subject: subject,
