@@ -26,26 +26,6 @@ class AppConstants {
   static const int thumbnailSize = 256;
   static const int imageQuality = 85;
 
-  // AI Model
-  static const String geminiModel = 'gemini-1.5-flash';
-  static const double aiTemperature = 0.3;
-  static const double aiTopP = 0.95;
-  static const int aiMaxOutputTokens = 8192;
-  static const double minAiConfidence = 0.7;
-  static const Duration aiProcessingTimeout = Duration(seconds: 60);
-
-  // Weather API
-  static const String weatherApiBaseUrl =
-      'https://api.openweathermap.org/data/2.5';
-
-  // Network
-  static const Duration networkTimeout = Duration(seconds: 30);
-
-  // Clothing Categories
-  static const List<String> clothingCategories = [
-    'tops',
-    'bottoms',
-    'dresses',
     'outerwear',
     'shoes',
     'accessories',
