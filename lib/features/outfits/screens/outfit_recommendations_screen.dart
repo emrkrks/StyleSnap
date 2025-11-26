@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/outfit_providers.dart';
 import 'outfit_detail_screen.dart';
-import 'package:uuid/uuid.dart';
-import '../../../models/outfit.dart';
 import '../../../models/weather_data.dart';
 import '../../../models/outfit_recommendation.dart';
 
