@@ -120,3 +120,49 @@ final filteredClothingItemsProvider = Provider<AsyncValue<List<ClothingItem>>>((
     error: (error, stack) => AsyncValue.error(error, stack),
   );
 });
+
+// Wardrobe items notifier for CRUD operations
+class WardrobeItemsNotifier
+    extends StateNotifier<AsyncValue<List<ClothingItem>>> {
+  final ClothingRepository _repository;
+
+  WardrobeItemsNotifier(this._repository) : super(const AsyncValue.loading()) {
+    _loadItems();
+  }
+
+  Future<void> _loadItems() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return _repository.getUserClothingItems();
+    });
+  }
+
+  Future<void> refresh() async {
+    await _loadItems();
+  }
+
+  Future<void> updateItem(ClothingItem item) async {
+    await _repository.updateClothingItem(item);
+    await refresh();
+  }
+
+  Future<void> toggleFavorite(String itemId, bool currentFavorite) async {
+    await _repository.toggleFavorite(itemId, currentFavorite);
+    await refresh();
+  }
+
+  Future<void> deleteItem(String itemId) async {
+    await _repository.deleteClothingItem(itemId);
+    await refresh();
+  }
+}
+
+// Wardrobe items provider
+final wardrobeItemsProvider =
+    StateNotifierProvider<
+      WardrobeItemsNotifier,
+      AsyncValue<List<ClothingItem>>
+    >((ref) {
+      final repository = ref.watch(clothingRepositoryProvider);
+      return WardrobeItemsNotifier(repository);
+    });
