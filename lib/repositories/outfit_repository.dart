@@ -49,7 +49,7 @@ class OutfitRepository {
           .from(AppConstants.outfitsTable)
           .select()
           .eq('user_id', userId)
-          .is_('deleted_at', null)
+          .isFilter('deleted_at', null)
           .order('updated_at', ascending: false)
           .limit(limit);
 
@@ -70,7 +70,7 @@ class OutfitRepository {
           .select()
           .eq('user_id', userId)
           .eq('is_favorite', true)
-          .is_('deleted_at', null)
+          .isFilter('deleted_at', null)
           .order('created_at', ascending: false);
 
       return (response as List).map((item) => Outfit.fromJson(item)).toList();
