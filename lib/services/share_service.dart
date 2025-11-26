@@ -12,7 +12,7 @@ class ShareService {
   }) async {
     try {
       final xFile = XFile(imageFile.path);
-      await Share.shareXFiles(
+      await SharePlus.instance.shareXFiles(
         [xFile],
         text: text ?? 'Check out my StyleSnap outfit! ✨',
         subject: subject,

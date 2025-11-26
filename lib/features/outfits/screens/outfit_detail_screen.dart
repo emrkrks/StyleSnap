@@ -97,7 +97,6 @@ class _OutfitDetailScreenState extends ConsumerState<OutfitDetailScreen> {
                     itemCount: _clothingItems.length,
                     itemBuilder: (context, index) {
                       final item = _clothingItems[index];
-                      final recItem = widget.recommendation.items[index];
 
                       return GestureDetector(
                         onTap: () {

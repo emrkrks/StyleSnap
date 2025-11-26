@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/clothing_item.dart';
-import '../../../core/constants/app_constants.dart';
 import '../providers/wardrobe_providers.dart';
 
 class ClothingDetailScreen extends ConsumerStatefulWidget {
