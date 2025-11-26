@@ -4,6 +4,8 @@ import '../providers/outfit_providers.dart';
 import 'outfit_detail_screen.dart';
 import 'package:uuid/uuid.dart';
 import '../../../models/outfit.dart';
+import '../../../models/weather_data.dart';
+import '../../../models/outfit_recommendation.dart';
 
 class OutfitRecommendationsScreen extends ConsumerWidget {
   const OutfitRecommendationsScreen({super.key});
@@ -93,7 +95,7 @@ class OutfitRecommendationsScreen extends ConsumerWidget {
 
 // Weather Card
 class _WeatherCard extends StatelessWidget {
-  final weather;
+  final WeatherData weather;
 
   const _WeatherCard({required this.weather});
 
@@ -190,7 +192,7 @@ class _WeatherCardError extends StatelessWidget {
 
 // Recommendation Card
 class _RecommendationCard extends StatelessWidget {
-  final recommendation;
+  final OutfitRecommendation recommendation;
   final int index;
   final VoidCallback onTap;
 
