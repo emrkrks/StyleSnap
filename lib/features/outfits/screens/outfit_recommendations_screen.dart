@@ -4,6 +4,10 @@ import '../providers/outfit_providers.dart';
 import 'outfit_detail_screen.dart';
 import '../../../models/weather_data.dart';
 import '../../../models/outfit_recommendation.dart';
+import '../../premium/screens/paywall_screen.dart';
+import '../../premium/widgets/banner_ad_widget.dart';
+import '../../premium/providers/subscription_provider.dart';
+import '../../../services/ad_service.dart';
 
 class OutfitRecommendationsScreen extends ConsumerWidget {
   const OutfitRecommendationsScreen({super.key});
@@ -13,79 +17,200 @@ class OutfitRecommendationsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final weatherAsync = ref.watch(weatherProvider);
     final recommendationState = ref.watch(dailyRecommendationsProvider);
+    final isPremium = ref.watch(isPremiumProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daily Outfit Recommendations'),
         elevation: 0,
+        actions: [
+          if (!isPremium)
+            TextButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const PaywallScreen()),
+                );
+              },
+              icon: const Icon(Icons.diamond, color: Colors.amber),
+              label: const Text(
+                'GO PREMIUM',
+                style: TextStyle(
+                  color: Colors.amber,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
           await ref.read(dailyRecommendationsProvider.notifier).refresh();
         },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Weather Card
-              weatherAsync.when(
-                loading: () => const _WeatherCardLoading(),
-                error: (error, _) => _WeatherCardError(error: error.toString()),
-                data: (weather) => _WeatherCard(weather: weather),
-              ),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Weather Card
+                    weatherAsync.when(
+                      loading: () => const _WeatherCardLoading(),
+                      error: (error, _) =>
+                          _WeatherCardError(error: error.toString()),
+                      data: (weather) => _WeatherCard(weather: weather),
+                    ),
 
-              const SizedBox(height: 24),
+                    const SizedBox(height: 24),
 
-              // Recommendations Section
-              Text(
-                'Your Daily Outfits',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+                    // Recommendations Section
+                    Text(
+                      'Your Daily Outfits',
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Recommendations List
+                    if (recommendationState.status ==
+                        RecommendationStatus.loading)
+                      const _RecommendationsLoading()
+                    else if (recommendationState.status ==
+                        RecommendationStatus.error)
+                      _RecommendationsError(error: recommendationState.error!)
+                    else if (recommendationState.recommendations.isEmpty)
+                      const _RecommendationsEmpty()
+                    else
+                      ...recommendationState.recommendations.asMap().entries.map((
+                        entry,
+                      ) {
+                        final index = entry.key;
+                        final rec = entry.value;
+                        final isLocked =
+                            !isPremium &&
+                            index >
+                                0; // Lock items after the first one for free users
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: isLocked
+                              ? _LockedRecommendationCard(
+                                  index: index + 1,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const PaywallScreen(),
+                                      ),
+                                    );
+                                  },
+                                )
+                              : _RecommendationCard(
+                                  recommendation: rec,
+                                  index: index + 1,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            OutfitDetailScreen(
+                                              recommendation: rec,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                        );
+                      }),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-
-              // Recommendations List
-              if (recommendationState.status == RecommendationStatus.loading)
-                const _RecommendationsLoading()
-              else if (recommendationState.status == RecommendationStatus.error)
-                _RecommendationsError(error: recommendationState.error!)
-              else if (recommendationState.recommendations.isEmpty)
-                const _RecommendationsEmpty()
-              else
-                ...recommendationState.recommendations.map((rec) {
-                  final index = recommendationState.recommendations.indexOf(
-                    rec,
-                  );
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: _RecommendationCard(
-                      recommendation: rec,
-                      index: index + 1,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                OutfitDetailScreen(recommendation: rec),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }),
-            ],
-          ),
+            ),
+            // Banner Ad
+            if (!isPremium) const BannerAdWidget(),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
+          if (!isPremium) {
+            // Show interstitial ad before refresh for free users
+            AdService().showInterstitialAd();
+          }
           await ref.read(dailyRecommendationsProvider.notifier).refresh();
         },
         icon: const Icon(Icons.refresh),
         label: const Text('New Recommendations'),
+      ),
+    );
+  }
+}
+
+class _LockedRecommendationCard extends StatelessWidget {
+  final int index;
+  final VoidCallback onTap;
+
+  const _LockedRecommendationCard({required this.index, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 160,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.lock, size: 48, color: Colors.grey),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Outfit #$index Locked',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Tap to unlock Premium',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.amber,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 12,
+              left: 12,
+              child: CircleAvatar(
+                backgroundColor: Colors.grey[300],
+                child: Text(
+                  '$index',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

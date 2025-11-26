@@ -1,4 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:io';
 
 class AppConfig {
   // Singleton pattern
@@ -41,4 +42,10 @@ class AppConfig {
         supabaseAnonKey.isNotEmpty &&
         geminiApiKey.isNotEmpty;
   }
+
+  String get revenueCatApiKey =>
+      Platform.isAndroid ? revenueCatApiKeyAndroid : revenueCatApiKeyIOS;
+
+  String get admobAppId =>
+      Platform.isAndroid ? adMobAppIdAndroid : adMobAppIdIOS;
 }

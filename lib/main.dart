@@ -8,6 +8,8 @@ import 'features/onboarding/screens/onboarding_screen.dart';
 import 'features/auth/providers/auth_providers.dart';
 import 'features/style_quiz/screens/style_quiz_screen.dart';
 import 'features/auth/screens/auth_screen.dart';
+import 'services/subscription_service.dart';
+import 'services/ad_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +37,15 @@ void main() async {
     }
   } else {
     debugPrint('⚠️ Supabase not configured. Running in demo mode.');
+  }
+
+  // Initialize Monetization Services
+  try {
+    await SubscriptionService().init();
+    await AdService().init();
+    debugPrint('✅ Monetization services initialized');
+  } catch (e) {
+    debugPrint('⚠️ Monetization initialization failed: $e');
   }
 
   runApp(const ProviderScope(child: StyleSnapApp()));
