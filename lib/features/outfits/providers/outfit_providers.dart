@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../../models/weather_data.dart';
 import '../../../models/outfit.dart';
 import '../../../models/outfit_recommendation.dart';
+import '../../../models/clothing_item.dart';
 import '../../../repositories/outfit_repository.dart';
 import '../../../repositories/recommendation_repository.dart';
 import '../../../services/weather_service.dart';
