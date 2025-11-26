@@ -125,6 +125,9 @@ class UserModel {
     return subscriptionExpiresAt!.isAfter(DateTime.now());
   }
 
+  // Alias for outfit recommendation service
+  List<String> get preferredStyles => stylePreferences;
+
   UserModel copyWith({
     String? id,
     DateTime? createdAt,
