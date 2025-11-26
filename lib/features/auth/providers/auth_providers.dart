@@ -20,6 +20,12 @@ final supabaseAuthStateProvider = StreamProvider<AuthState>((ref) {
   return supabase.authStateChanges;
 });
 
+// Auth Session Provider
+final authProvider = StreamProvider<Session?>((ref) {
+  final supabase = ref.watch(supabaseServiceProvider);
+  return supabase.authStateChanges.map((event) => event.session);
+});
+
 // Current User Provider
 final currentUserProvider = FutureProvider<UserModel?>((ref) async {
   final repository = ref.watch(userRepositoryProvider);

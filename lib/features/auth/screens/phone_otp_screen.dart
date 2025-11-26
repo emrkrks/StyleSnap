@@ -82,7 +82,7 @@ class _PhoneOTPScreenState extends ConsumerState<PhoneOTPScreen> {
               const SizedBox(height: 32),
 
               // Title
-              const Text(
+              Text(
                 'Enter verification code',
                 style: AppTextStyles.headlineLarge,
                 textAlign: TextAlign.center,
